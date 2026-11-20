@@ -1,0 +1,383 @@
+{
+  "stages": {
+    "initial": {
+      "GET /gateway/channels": {
+        "data": [
+          {
+            "id": "oil-main",
+            "card": "oil-check",
+            "window": [
+              10,
+              24
+            ],
+            "duration": 3,
+            "pauseCost": 1,
+            "assembly": "G2",
+            "signals": [
+              "pressure"
+            ],
+            "sample": "OL-07"
+          },
+          {
+            "id": "probe-alpha",
+            "card": "drive-check",
+            "window": [
+              14,
+              25
+            ],
+            "duration": 4,
+            "pauseCost": 1,
+            "assembly": "G2",
+            "signals": [
+              "rpm",
+              "torque"
+            ],
+            "sample": "DV-09"
+          },
+          {
+            "id": "probe-mirror",
+            "card": "drive-check",
+            "window": [
+              15,
+              31
+            ],
+            "duration": 6,
+            "pauseCost": 1,
+            "assembly": "G2",
+            "signals": [
+              "rpm",
+              "torque"
+            ],
+            "sample": "DV-09"
+          },
+          {
+            "id": "feed-side",
+            "card": "feed-check",
+            "window": [
+              16,
+              22
+            ],
+            "duration": 2,
+            "pauseCost": 1,
+            "assembly": "F9",
+            "signals": [
+              "feedrate"
+            ],
+            "sample": "FD-11"
+          }
+        ]
+      },
+      "GET /gateway/clock": {
+        "data": {
+          "now": 16,
+          "pauseLimit": 3
+        }
+      },
+      "GET /desk/orders": {
+        "data": [
+          {
+            "order": "W7",
+            "advisor": "设备商甲",
+            "assembly": "G2",
+            "priority": 1,
+            "due": 31,
+            "pauseLimit": 2,
+            "cards": [
+              "oil-check",
+              "drive-check"
+            ],
+            "requiredSignals": [
+              "pressure",
+              "rpm",
+              "torque"
+            ],
+            "visibleSignals": [
+              "pressure",
+              "rpm"
+            ]
+          },
+          {
+            "order": "W8",
+            "advisor": "设备商乙",
+            "assembly": "G2",
+            "priority": 2,
+            "due": 31,
+            "pauseLimit": 2,
+            "cards": [
+              "oil-check",
+              "drive-check"
+            ],
+            "requiredSignals": [
+              "pressure",
+              "rpm",
+              "torque"
+            ],
+            "visibleSignals": [
+              "torque"
+            ]
+          },
+          {
+            "order": "W9",
+            "advisor": "工厂值班",
+            "assembly": "F9",
+            "priority": 3,
+            "due": 22,
+            "pauseLimit": 1,
+            "cards": [
+              "feed-check"
+            ],
+            "requiredSignals": [
+              "feedrate"
+            ],
+            "visibleSignals": [
+              "feedrate"
+            ]
+          }
+        ]
+      },
+      "GET /desk/eligibility": {
+        "data": [
+          {
+            "card": "oil-check",
+            "assembly": "G2",
+            "conclusion": "allow",
+            "checkId": "V1",
+            "permits": [
+              "drive-check"
+            ]
+          }
+        ]
+      },
+      "POST /gateway/read/oil-main": {
+        "data": {
+          "receipt": "H1",
+          "state": "complete",
+          "release": false,
+          "assembly": "G2",
+          "sample": "OL-07",
+          "chunks": [
+            {
+              "pressure": 172
+            }
+          ]
+        }
+      },
+      "POST /gateway/read/probe-alpha": {
+        "status": 202,
+        "data": {
+          "receipt": "H2",
+          "state": "pending",
+          "release": false,
+          "acceptedAt": 16
+        }
+      },
+      "GET /gateway/receipt/H2": {
+        "data": {
+          "receipt": "H2",
+          "state": "pending",
+          "release": false
+        }
+      },
+      "POST /gateway/read/probe-mirror": {
+        "data": {
+          "receipt": "H4",
+          "state": "complete",
+          "release": false,
+          "sample": "DV-09",
+          "assembly": "G2",
+          "chunks": [
+            {
+              "rpm": 1210,
+              "torque": 26
+            }
+          ]
+        }
+      },
+      "POST /gateway/read/feed-side": {
+        "data": {
+          "receipt": "H3",
+          "state": "complete",
+          "release": false,
+          "sample": "FD-11",
+          "assembly": "F9",
+          "chunks": [
+            {
+              "feedrate": 62
+            }
+          ]
+        }
+      }
+    },
+    "invalidation": {
+      "GET /gateway/clock": {
+        "data": {
+          "now": 18,
+          "pauseLimit": 3
+        }
+      },
+      "GET /desk/eligibility": {
+        "data": [
+          {
+            "card": "oil-check",
+            "assembly": "G2",
+            "conclusion": "withdrawn",
+            "checkId": "V1",
+            "permits": [
+              "drive-check"
+            ]
+          }
+        ]
+      },
+      "GET /gateway/receipt/H2": {
+        "data": {
+          "receipt": "H2",
+          "state": "partial",
+          "release": false,
+          "sample": "DV-09",
+          "assembly": "G2",
+          "chunks": [
+            {
+              "rpm": 1210
+            }
+          ],
+          "resume": "/gateway/resume/H2"
+        }
+      },
+      "POST /gateway/resume/H2": {
+        "status": 409,
+        "data": {
+          "reason": "装备已换装",
+          "receipt": "H2",
+          "release": false
+        }
+      }
+    },
+    "replacement": {
+      "GET /gateway/clock": {
+        "data": {
+          "now": 22,
+          "pauseLimit": 3
+        }
+      },
+      "GET /gateway/channels": {
+        "data": [
+          {
+            "id": "oil-main",
+            "card": "oil-check",
+            "window": [
+              10,
+              24
+            ],
+            "duration": 3,
+            "pauseCost": 1,
+            "assembly": "G2",
+            "signals": [
+              "pressure"
+            ],
+            "sample": "OL-07"
+          },
+          {
+            "id": "probe-alpha",
+            "card": "drive-check",
+            "window": [
+              14,
+              25
+            ],
+            "duration": 4,
+            "pauseCost": 1,
+            "assembly": "G2",
+            "signals": [
+              "rpm",
+              "torque"
+            ],
+            "sample": "DV-09"
+          },
+          {
+            "id": "probe-mirror",
+            "card": "drive-check",
+            "window": [
+              15,
+              31
+            ],
+            "duration": 6,
+            "pauseCost": 1,
+            "assembly": "G2",
+            "signals": [
+              "rpm",
+              "torque"
+            ],
+            "sample": "DV-09"
+          },
+          {
+            "id": "feed-side",
+            "card": "feed-check",
+            "window": [
+              16,
+              22
+            ],
+            "duration": 2,
+            "pauseCost": 1,
+            "assembly": "F9",
+            "signals": [
+              "feedrate"
+            ],
+            "sample": "FD-11"
+          },
+          {
+            "id": "probe-next",
+            "card": "drive-check",
+            "window": [
+              15,
+              31
+            ],
+            "duration": 6,
+            "pauseCost": 1,
+            "assembly": "G3",
+            "signals": [
+              "rpm",
+              "torque"
+            ],
+            "sample": "DV-10"
+          }
+        ]
+      },
+      "GET /desk/eligibility": {
+        "data": [
+          {
+            "card": "oil-check",
+            "assembly": "G3",
+            "conclusion": "allow",
+            "checkId": "V2",
+            "permits": [
+              "drive-check"
+            ]
+          }
+        ]
+      },
+      "GET /gateway/receipt/H2": {
+        "data": {
+          "receipt": "H2",
+          "state": "failed",
+          "release": true,
+          "sample": "DV-09",
+          "assembly": "G2"
+        }
+      },
+      "POST /gateway/read/probe-next": {
+        "data": {
+          "receipt": "H5",
+          "state": "complete",
+          "release": false,
+          "sample": "DV-10",
+          "assembly": "G3",
+          "chunks": [
+            {
+              "rpm": 1260,
+              "torque": 24
+            }
+          ]
+        }
+      }
+    }
+  }
+}

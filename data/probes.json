@@ -1,0 +1,144 @@
+[
+  {
+    "path": "/gateway/channels",
+    "stage": "initial",
+    "method": "GET",
+    "status": 200,
+    "expected": {
+      "path": [
+        2,
+        "sample"
+      ],
+      "value": "DV-09"
+    }
+  },
+  {
+    "path": "/desk/orders",
+    "stage": "initial",
+    "method": "GET",
+    "status": 200,
+    "expected": {
+      "path": [
+        1,
+        "visibleSignals"
+      ],
+      "value": [
+        "torque"
+      ]
+    }
+  },
+  {
+    "path": "/gateway/read/probe-alpha",
+    "stage": "initial",
+    "method": "POST",
+    "status": 202,
+    "expected": {
+      "path": [
+        "receipt"
+      ],
+      "value": "H2"
+    }
+  },
+  {
+    "path": "/gateway/receipt/H2",
+    "stage": "initial",
+    "method": "GET",
+    "status": 200,
+    "expected": {
+      "path": [
+        "state"
+      ],
+      "value": "pending"
+    }
+  },
+  {
+    "path": "/gateway/read/feed-side",
+    "stage": "initial",
+    "method": "POST",
+    "status": 200,
+    "expected": {
+      "path": [
+        "assembly"
+      ],
+      "value": "F9"
+    }
+  },
+  {
+    "path": "/desk/eligibility",
+    "stage": "invalidation",
+    "method": "GET",
+    "status": 200,
+    "expected": {
+      "path": [
+        0,
+        "conclusion"
+      ],
+      "value": "withdrawn"
+    }
+  },
+  {
+    "path": "/gateway/receipt/H2",
+    "stage": "invalidation",
+    "method": "GET",
+    "status": 200,
+    "expected": {
+      "path": [
+        "chunks"
+      ],
+      "value": [
+        {
+          "rpm": 1210
+        }
+      ]
+    }
+  },
+  {
+    "path": "/gateway/resume/H2",
+    "stage": "invalidation",
+    "method": "POST",
+    "status": 409,
+    "expected": {
+      "path": [
+        "release"
+      ],
+      "value": false
+    }
+  },
+  {
+    "path": "/gateway/receipt/H2",
+    "stage": "replacement",
+    "method": "GET",
+    "status": 200,
+    "expected": {
+      "path": [
+        "release"
+      ],
+      "value": true
+    }
+  },
+  {
+    "path": "/desk/eligibility",
+    "stage": "replacement",
+    "method": "GET",
+    "status": 200,
+    "expected": {
+      "path": [
+        0,
+        "assembly"
+      ],
+      "value": "G3"
+    }
+  },
+  {
+    "path": "/gateway/read/probe-next",
+    "stage": "replacement",
+    "method": "POST",
+    "status": 200,
+    "expected": {
+      "path": [
+        "sample"
+      ],
+      "value": "DV-10"
+    }
+  }
+]
