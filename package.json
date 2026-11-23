@@ -8,6 +8,8 @@
   },
   "scripts": {
     "sources": "node sources/server.mjs",
+    "workbench": "node server/workbench.mjs",
+    "drill": "node scripts/drill.mjs",
     "test": "node --test test/*.test.mjs"
   }
 }
